@@ -7,9 +7,9 @@
     }
   },
   "appType": "APP",
-  "name": "Group Activities",
+  "name": "households-assessed",
   "version": "1.0.0",
-  "description": "group activities",
+  "description": "households assessed",
   "icons": {
     "16": "assets/icons/image001.png",
     "48": "assets/icons/image001.png",
@@ -19,5 +19,5 @@
     "name": "AICONNECT - 0777108323",
     "url": "http://dhis2.org"
   },
-  "manifest_generated_at": "Fri Sep 20 2024 00:00:12 GMT-0700 (Pacific Daylight Time)"
+  "manifest_generated_at": "Mon Oct 28 2024 03:56:50 GMT-0700 (Pacific Daylight Time)"
 }

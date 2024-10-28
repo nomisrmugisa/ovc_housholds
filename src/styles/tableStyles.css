@@ -1,0 +1,33 @@
+/* Add this CSS to your styles file or in a <style> tag in your component */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: bold;
+}
+
+td {
+  background-color: #f9e4b7;
+}
+
+tr:nth-child(even) td {
+  background-color: #f7d9a8;
+}
+
+tr:hover td {
+  background-color: #f1c27d;
+}
+
