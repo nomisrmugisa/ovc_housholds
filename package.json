@@ -91,7 +91,7 @@
     "name": "households-assessed",
     "description": "households assessed",
     "launch_path": "index.html",
-    "appType": "APP",
+    "appType": "DASHBOARD_WIDGET",
     "icons": {
       "16": "assets/icons/image001.png",
       "48": "assets/icons/image001.png",

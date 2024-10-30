@@ -7,7 +7,7 @@ import HouseholdsAssessed from './components/HouseholdsAssessed';
 export const App = observer(() => {
   return (
     <>
-      <HeaderBar
+      {/* <HeaderBar
         appName={"Households Assessed"}
         style={{
           left: 0,
@@ -16,7 +16,7 @@ export const App = observer(() => {
           width: "100%",
           zIndex: 1000,
         }}
-      />
+      /> */}
       <Router>
         <Switch>
           <Route exact path="/" component={HouseholdsAssessed} />

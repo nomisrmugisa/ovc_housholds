@@ -6,7 +6,7 @@
       "href": ".."
     }
   },
-  "appType": "APP",
+  "appType": "DASHBOARD_WIDGET",
   "name": "households-assessed",
   "version": "1.0.0",
   "description": "households assessed",
@@ -19,5 +19,5 @@
     "name": "AICONNECT - 0777108323",
     "url": "http://dhis2.org"
   },
-  "manifest_generated_at": "Mon Oct 28 2024 03:56:50 GMT-0700 (Pacific Daylight Time)"
+  "manifest_generated_at": "Wed Oct 30 2024 07:02:00 GMT-0700 (Pacific Daylight Time)"
 }
