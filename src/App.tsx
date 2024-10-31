@@ -3,6 +3,7 @@ import React from "react";
 import { HeaderBar } from "@dhis2/ui-widgets";
 import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import HouseholdsAssessed from './components/HouseholdsAssessed';
+import { OrgUnitSearch } from './components/HH_OrgUnitSearch';
 
 export const App = observer(() => {
   return (
@@ -19,6 +20,7 @@ export const App = observer(() => {
       /> */}
       <Router>
         <Switch>
+        {/* <Route exact path="/" component={OrgUnitSearch} /> */}
           <Route exact path="/" component={HouseholdsAssessed} />
         </Switch>
       </Router>

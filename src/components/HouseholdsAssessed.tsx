@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useTable, Column } from 'react-table';
 import '../styles/tableStyles.css';
+import '../styles/orgUnitSearch.css';
+import { IOrgUnit } from './types/OrgUnit';
+import { getOrgUnits } from './apis/getOrgUnits';
 
 interface DataRow {
   assessmentDate: string;
@@ -13,24 +16,20 @@ interface DataRow {
 
 const HouseholdsAssessed: React.FC = () => {
   const [data, setData] = useState<DataRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState('2024-01-01');
-  const [endDate, setEndDate] = useState('2024-01-31');
-  const [orgUnitName, setOrgUnitName] = useState('');
-  const [orgUnitId, setOrgUnitId] = useState('');
-
-  useEffect(() => {
-    if (orgUnitId) {
-      fetchData();
-    }
-  }, [orgUnitId, startDate, endDate]);
+  const [endDate, setEndDate] = useState('2024-12-31');
+  const [search, setSearch] = useState('');
+  const [orgUnits, setOrgUnits] = useState<IOrgUnit[]>([]);
+  const [selectedOrgUnitId, setSelectedOrgUnitId] = useState('');
 
   const fetchData = async () => {
+    if (!selectedOrgUnitId) return;
     setLoading(true);
     try {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/ovc/api/40/analytics/events/query/HEWq6yr4cs5`, {
         params: {
-          dimension: `IyKRQFkfwMk,ou:${orgUnitId},sYE3K7fFM4Y.QKgYbRzJWHB,tHCT4RKXoiU`,
+          dimension: `IyKRQFkfwMk,ou:${selectedOrgUnitId},sYE3K7fFM4Y.QKgYbRzJWHB,tHCT4RKXoiU`,
           headers: 'eventdate,ouname,tHCT4RKXoiU,sYE3K7fFM4Y.QKgYbRzJWHB,IyKRQFkfwMk',
           totalPages: false,
           startDate: startDate.replace(/-/g, ''),
@@ -81,21 +80,24 @@ const HouseholdsAssessed: React.FC = () => {
     }));
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/ovc/api/organisationUnits?filter=displayName:ilike:${orgUnitName}&fields=id,displayName`);
-      const orgUnit = response.data.organisationUnits.find((org_unit: any) =>
-        org_unit.displayName.toLowerCase() === orgUnitName.toLowerCase()
-      );
+  const handleOrgUnitSearch = async () => {
+    if (search.length === 0) {
+      setOrgUnits([]);
+      return;
+    }
 
-      if (orgUnit) {
-        setOrgUnitId(orgUnit.id);
-      } else {
-        alert('Organisation Unit not found');
-      }
+    try {
+      const data = await getOrgUnits(search);
+      setOrgUnits(data || []);
     } catch (error) {
-      console.error('Error fetching organisation units:', error);
+      console.error("Error fetching org units:", error);
+      setOrgUnits([]);
+    }
+  };
+
+  const handleSearch = () => {
+    if (selectedOrgUnitId) {
+      fetchData();
     }
   };
 
@@ -125,36 +127,60 @@ const HouseholdsAssessed: React.FC = () => {
 
   return (
     <div>
-      <form onSubmit={handleSearch} style={{ marginBottom: '20px' }}>
-        <label>
-          Start Date:
+      <header className="org-unit-search-header">
+        <form style={{ display: 'flex', gap: '1rem', marginBottom: '20px' }}>
+          <label>
+            Start Date:
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="search-input"
+              style={{ width: '60%' }}
+              required
+            />
+          </label>
+          <label>
+            End Date:
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="search-input"
+              style={{ width: '60%' }}
+              required
+            />
+          </label>
           <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            required
+            className="search-input"
+            placeholder="Search for org unit"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyUp={handleOrgUnitSearch}
           />
-        </label>
-        <label>
-          End Date:
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Organisation Unit:
-          <input
-            type="text"
-            value={orgUnitName}
-            onChange={(e) => setOrgUnitName(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Search</button>
-      </form>
+          <button type="button" onClick={handleSearch} className="search-button">Search</button>
+        </form>
+        <ul className="org-unit-list">
+          {search && orgUnits.length > 0 ? (
+            orgUnits.map((orgUnit) => (
+              <li
+                onClick={() => {
+                  setSearch(orgUnit.displayName);
+                  setSelectedOrgUnitId(orgUnit.id);
+                  setOrgUnits([]);
+                }}
+                key={orgUnit.id}
+                className="org-unit-item"
+              >
+                {orgUnit.displayName}
+              </li>
+            ))
+          ) : (
+            search && orgUnits.length === 0 
+            // && <li className="no-results">No results found</li>
+          )}
+        </ul>
+      </header>
       {loading ? (
         <p>Loading...</p>
       ) : (
